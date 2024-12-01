@@ -11,22 +11,22 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { staticBaseUrl } from './constants';
 
 @ApiTags('文件上传')
-@ApiBearerAuth()
-@Controller('upload')
+@ApiBearerAuth() // 启用Bearer Token认证
+@Controller('upload') // 定义上传控制器路由前缀
 export class UploadController {
-  @Post('file')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
+  @Post('file') // 处理单文件上传的POST请求
+  @UseInterceptors(FileInterceptor('file')) // 使用文件拦截器处理上传的文件
+  uploadFile(@UploadedFile() file: Express.Multer.File) { // 获取上传的单个文件
     return {
-      file: staticBaseUrl + file.originalname,
+      file: staticBaseUrl + file.originalname, // 返回文件访问URL
     };
   }
 
-  @Post('files')
-  @UseInterceptors(FileInterceptor('files'))
-  uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
+  @Post('files') // 处理多文件上传的POST请求
+  @UseInterceptors(FileInterceptor('files')) // 使用文件拦截器处理上传的多个文件
+  uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) { // 获取上传的多个文件
     return {
-      files: files.map((f) => staticBaseUrl + f.originalname),
+      files: files.map((f) => staticBaseUrl + f.originalname), // 返回所有文件的访问URL数组
     };
   }
 }
