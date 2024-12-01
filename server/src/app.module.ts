@@ -14,41 +14,49 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { QuoteModule } from './quote/quote.module';
 import { CountModule } from './count/count.module';
 
+// Docker环境变量,用于判断是否在Docker容器中运行
 const DOCKER_ENV = process.env.DOCKER_ENV;
 
-const businessModules = [
-  AuthModule,
-  TodoModule,
-  UserModule,
-  UploadModule,
-  StaticModule,
-  ChatModule,
-  QuoteModule,
-  CountModule,
+const businessModules = [ // 业务模块列表
+  AuthModule,            // 认证模块
+  TodoModule,           // 待办事项模块
+  UserModule,           // 用户模块
+  UploadModule,         // 文件上传模块
+  StaticModule,         // 静态资源模块
+  ChatModule,           // 聊天模块
+  QuoteModule,          // 报价模块
+  CountModule,          // 计数模块
 ];
 
+// 第三方库模块列表
 const libModules = [
+  // 配置模块,用于加载配置文件
   ConfigModule.forRoot({
-    load: [loadConfig],
-    envFilePath: [DOCKER_ENV ? '.docker.env' : '.env'],
+    load: [loadConfig], // 加载自定义配置
+    envFilePath: [DOCKER_ENV ? '.docker.env' : '.env'], // 根据环境选择配置文件
   }),
+  
+  // 定时任务模块
   ScheduleModule.forRoot(),
+  
+  // TypeORM数据库模块
   TypeOrmModule.forRootAsync({
-    imports: [ConfigModule],
-    inject: [ConfigService],
+    imports: [ConfigModule], // 导入配置模块
+    inject: [ConfigService], // 注入配置服务
     useFactory: (configService: ConfigService) => {
+      // 从配置中获取数据库连接信息
       const { host, port, username, password, database } =
         configService.get('db');
 
       return {
-        type: 'mariadb',
-        // .env 获取
+        type: 'mariadb', // 数据库类型
+        // 数据库连接配置,从环境变量获取
         host,
         port,
         username,
         password,
         database,
-        // entities
+        // 实体文件路径配置
         entities: ['dist/**/*.entity{.ts,.js}'],
       };
     },

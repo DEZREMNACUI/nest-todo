@@ -13,21 +13,21 @@ import { LogModule } from '../log/log.module';
 
 @Module({
   imports: [
-    LogModule,
-    UserModule,
-    PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: `${jwtConstants.expiresIn}m` },
+    LogModule, // 日志模块
+    UserModule, // 用户模块
+    PassportModule, // 身份验证模块
+    JwtModule.register({ // JWT 模块配置
+      secret: jwtConstants.secret, // JWT 密钥
+      signOptions: { expiresIn: `${jwtConstants.expiresIn}m` }, // token 过期时间,单位:分钟
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController], // 认证控制器
   providers: [
-    AuthService,
-    LocalStrategy,
-    JwtStrategy,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    AuthService, // 认证服务
+    LocalStrategy, // 本地认证策略
+    JwtStrategy, // JWT 认证策略
+    { provide: APP_GUARD, useClass: JwtAuthGuard }, // 全局 JWT 守卫
   ],
-  exports: [AuthService],
+  exports: [AuthService], // 导出认证服务
 })
 export class AuthModule {}

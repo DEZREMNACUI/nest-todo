@@ -30,10 +30,15 @@ export class TodoService {
     return this.todoRepository.find();
   }
 
+  /**
+   * 根据用户ID查找所有待办事项
+   * @param userId 用户ID
+   * @returns 待办事项列表
+   */
   async findAllByUserId(userId: number): Promise<Todo[]> {
-    const user = await this.userRepository.findOne({
-      relations: ['todos'],
-      where: { id: userId },
+    const user = await this.userRepository.findOne({ // 根据用户ID查找用户信息
+      relations: ['todos'], // 关联查询todos表
+      where: { id: userId }, // 匹配用户ID
     });
 
     return user ? user.todos : [];

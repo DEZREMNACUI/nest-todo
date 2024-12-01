@@ -8,8 +8,8 @@ const uploadDistDir = join(__dirname, '../../', 'upload_dist');
 export class StaticController {
   @SkipJwtAuth()
   @Get(':subPath')
-  render(@Param('subPath') subPath, @Res() res) {
-    const filePath = join(uploadDistDir, subPath);
-    return res.sendFile(filePath);
+  render(@Param('subPath') subPath, @Res() res) { // 渲染静态文件
+    const filePath = join(uploadDistDir, subPath); // 拼接文件路径
+    return res.sendFile(filePath); // 返回文件内容
   }
 }
